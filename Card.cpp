@@ -139,7 +139,10 @@ void Card::getCardFunc(Acard card,int row){
         cardKing(card.pic, row);
         break;
     default:
-        cardAce(spade, row);
+        strcpy(card.pic,spade);
+        card.num=1;
+        cardAce(card.pic, row);
+        break;
     
     }
 }
@@ -289,10 +292,26 @@ vector<Card::Acard> Card::getTripple(){
     card1.num=7;
     strcpy(card1.pic, spade);
 
+    //Initalize 8 diamond
+    Acard card2;
+    card2.num=8;
+    strcpy(card2.pic, diamond);
+
+    //Initalize 10 clover
+    Acard card3;
+    card3.num=10;
+    strcpy(card3.pic, club);
+
     //Push back 3 7 spades
     hand.push_back(card1);
     hand.push_back(card1);
     hand.push_back(card1);
+
+    //Push back other 2 cards
+    hand.push_back(card2);
+    hand.push_back(card2);
+
+    return hand;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
