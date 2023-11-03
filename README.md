@@ -1,4 +1,4 @@
-Slot Overflow Casino
+Grocery List
 ==
 
-Slot Overflow Casino is a casino game that lets you play your favorite games like, poker roulett and more.
+This is a grocery list program that stores the items a user scans, and saves it in a linked list. When the program finishes it saves the recibt to a txt file.
