@@ -49,16 +49,16 @@ int Poker::start(){
             cout << "\nYour Game Balance is = $" << gameBalance 
                     <<"\nChoose Option"
                     <<"\n1: Play Round " 
-                    << "\n2: Quit "
+                    <<"\n2: Validate Odds"
+                    << "\n3: Quit "
                     <<"\nEnter: ";
-                    cin.ignore();
-                    cin.clear();
-            while(!(cin >> menuOption) || menuOption < 1 || menuOption > 2)
+            while(!(cin >> menuOption) || menuOption < 1 || menuOption > 3)
             {
                 cout << "\nYour Game Balance is = $" << gameBalance 
                     <<"\nChoose Option"
                     <<"\n1: Play Round " 
-                    << "\n2: Quit "
+                    <<"\n2: Validate Odds"
+                    << "\n3: Quit "
                     <<"\nEnter: ";
                     cin.ignore();
                     cin.clear();
@@ -93,9 +93,14 @@ int Poker::start(){
                 //Adjust the game balance based on the users hand
                 gameBalance += bet;
             }
+            
+            //If user enters 2, validate a custom hand
+            if(menuOption == 2){
+                validate();
+            }
 
             //If user enters 2, add to the game balance to the player balance and return to previous menu
-            if(menuOption == 2) {
+            if(menuOption == 3) {
                 playerBalance += gameBalance; //add the game balance to the  playerBalance
                 gameBalance = 0;//Reset game balance
             }
@@ -135,9 +140,11 @@ vector<Poker::Acard> Poker::startRound(){
             currentHand[i] = a;
         }
     }
-
-    //Print and return the new hand
+    
+    //Reprint cards
     printCards(handSize, currentHand);
+
+    //Return current hand
     return currentHand;
 
 }
@@ -174,7 +181,11 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
         if(strcmp(card.pic, diamond) == 0)
             ++suits['d']; 
 
-        ++ranks[card.num];
+        //Ace is 14 in Poker
+        if(card.num == 1)
+            ++ranks[14];
+
+        else ++ranks[card.num];
     }
 
 
@@ -182,24 +193,32 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
     if(suits.size() == 1 && ranks[ACE] && ranks[KING] && ranks[QUEEN] && ranks[JACK] && ranks[TEN])
         multiplier = ROYAL_FLUSH;
 
-    //If straight flush
-    if(multiplier == 0  && suits.size() == 1){
+    // If straight flush
+    if (multiplier == 0 && suits.size() == 1) {
+        vector<int> uniqueRanks;
 
-        //If the ranks of the hand are in order, multiplier will be set to straight flush
-        int prevRank = 0;
-        for(const auto rank : ranks){
-
-            //If they are not in order
-            if(prevRank != 0 && (prevRank+1) != rank.first){
-                prevRank = -1; //Indicates not a flush
-                break;
-            }
-            prevRank = rank.first; //Update prev rank
+        // Store the unique ranks in the hand
+        for (const auto& rank : ranks) {
+            uniqueRanks.push_back(rank.first);
         }
 
-        //Check if it is sequential
-        if(prevRank != -1)
-            multiplier = STRAIGHT_FLUSH;
+        // Sort the unique ranks
+        sort(uniqueRanks.begin(), uniqueRanks.end());
+
+        // Check if there are at least 5 unique ranks in a consecutive sequence
+        if (uniqueRanks.size() >= 5) {
+            bool straight = true;
+            for (size_t i = 0; i < uniqueRanks.size() - 1; i++) {
+                if (uniqueRanks[i] + 1 != uniqueRanks[i + 1]) {
+                    straight = false;
+                    break;
+                }
+            }
+
+            // Set multiplier to straight flush if it's a straight flush
+            if (straight) 
+                multiplier = STRAIGHT_FLUSH;
+        }   
     }
 
     //If Four of a kind
@@ -208,7 +227,7 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
 
         //Go through the ranks of cards
         for(const auto rank : ranks) 
-            if(rank.second == 4) //If four of the same card are found, set fourKind to true
+            if(rank.second >= 4) //If four of the same card are found, set fourKind to true
                 fourKind = true;
 
         if(fourKind)
@@ -235,24 +254,30 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
     }
 
     //If straight
-    if(multiplier == 0 && ranks.size() == 5){
-        bool first = true; //Flag for if it's first
-        bool straight = false; //Flag for if it's a straight
-        int prev; //For previous card
+    if (multiplier == 0 && ranks.size() == 5) {
+        vector<int> uniqueRanks;
 
-        //Loop through the ranks present
-        for(auto card : ranks){
-            if(!first && card.first != prev+1){
+        //Push back unique ranks
+        for (const auto& rank : ranks) {
+            uniqueRanks.push_back(rank.first);
+        }
+
+        //Sort the unique ranks
+        sort(uniqueRanks.begin(), uniqueRanks.end());
+
+        //Figure out if it's a straight
+        bool straight = true;
+        for (int i = 0; i < 4; i++) {
+            if (uniqueRanks[i] + 1 != uniqueRanks[i + 1]) {
                 straight = false;
                 break;
             }
-
-            prev = card.first;
-            first = false; //Start comparing
         }
 
-        if(straight) 
+        //Set multiplier to straight
+        if (straight) {
             multiplier = STRAIGHT;
+        }
     }
 
     //If three of a kind
@@ -268,17 +293,23 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
             multiplier = TRIPLE;
     }
 
-    //If two of a kind
+    //If two pair
     if(multiplier == 0){
-        bool twoKind = false; //Check if two cards are found
+        int pairs = 0; // Count of pairs
 
-        for(const auto rank : ranks) 
-            if(rank.second == 2) //If you find 2 of the same cards set three kinds to true
-                twoKind = true;
+        //Go through ranks
+        for (const auto rank : ranks) {
 
-        //If three kind is true, then change multiplier
-        if(twoKind)
-            multiplier = TRIPLE;
+            //If there is a pair
+            if (rank.second >= 2) 
+                pairs++;//Add to pairs
+            
+        }
+
+        //If there is 2 pairs
+        if (pairs == 2) 
+            multiplier = TWO_PAIR;
+        
     }
 
     if(multiplier == 0){
@@ -327,3 +358,46 @@ void Poker::deposite(){
     cout << "Game balance is now " << gameBalance << " 💵"<< endl;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+                            //Validate any hand//
+////////////////////////////////////////////////////////////////////////////////////////////////
+void Poker::validate(){
+
+    //Create custom hand
+    vector<Acard> hand = customHand(handSize);
+
+    //Print the cards
+    printCards(handSize,hand);
+
+    //Get the reward
+    int reward = getReward(1, hand);
+
+    //Print the rreward
+    cout << "\nMultiplier is  " << reward << endl;
+    rewardTable();
+}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+                            //Print Reward Table//
+////////////////////////////////////////////////////////////////////////////////////////////////
+void Poker::rewardTable(){
+    //Print reward Table
+    cout << "\nPoker With Pointers Hand Reward Table" << endl;
+    cout << " ____________________________________ " << endl;
+    cout << "|Hand           |Reward              | " <<endl;
+    cout << "|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| " << endl;
+    cout << "|Jack Up        |x1                  | " << endl; 
+    cout << "|Two Pait       |x2                  | " << endl;
+    cout << "|Tripple        |x4                  | " << endl;
+    cout << "|Straight       |x6                  | " << endl;
+    cout << "|Flush          |x10                 | " << endl;
+    cout << "|Full House     |x100                | " << endl;
+    cout << "|Four Card      |x1000               | " << endl;
+    cout << "|Straight Flush |x10000              | " << endl;
+    cout << "|Royal Flush    |x10000              | " << endl;
+    cout << "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾" << endl;
+}
+
+
+//enum {JACK_UP = 1, TWO_PAIR = 2, TRIPLE = 4, STRAIGHT = 6, FLUSH = 10, FULL_HOUSE = 100, FOUR_CARD = 1000, STRAIGHT_FLUSH = 10000, ROYAL_FLUSH = 10000};

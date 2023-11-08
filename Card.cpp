@@ -204,6 +204,7 @@ void Card::printCards(int rowSize, vector<Acard> dk){
 
         for(int j = rowSize; j > 0; j--){
             getCardFunc(dk[index],i); //Get the 
+            cout << "Card Symbol is " << dk[index].pic << endl;
             ++index;//Iterate through cards
         }
     }
@@ -283,35 +284,59 @@ void Card::createHeads(int numberOfCards, int cols){
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
-                            //Start Of Hand Functions //
+                            //Custom hand //
 ////////////////////////////////////////////////////////////////////////////////////////////////
-vector<Card::Acard> Card::getTripple(){
-    vector<Acard> hand;//initalize hand
-    //initalize a 7 spade
-    Acard card1;
-    card1.num=7;
-    strcpy(card1.pic, spade);
+vector<Card::Acard> Card::customHand(int handSize){
+        vector<Acard> hand;
+        cout << "\nEnter " << handSize << " Cards" << endl;
+        for(int i = 0; i < handSize; i++){
+            
+            Acard card;//Initalize card
+            
+            //Get card Numbe
+            int num = -1;
+            cout << "\nCard " << i+1 << endl;
+            cout << "Enter a number between 1 and 13\nEnter: ";
+            while(!(cin >> num) || num < 1 || num > 13){
+                cout << "Enter: ";
+                cin.ignore();
+                cin.clear();
+            }
 
-    //Initalize 8 diamond
-    Acard card2;
-    card2.num=8;
-    strcpy(card2.pic, diamond);
+            //Get card Suite
+            int s = -1;
+            cout << "\nCard " << i+1 << endl;
+            cout << "1: Spade\n2: Club \n3: Heart\n4: Diamond\nEnter: ";
+            while(!(cin >> s) || s < 1 || s > 4){
+                cout << "Enter: ";
+                cin.ignore();
+                cin.clear();
+            }
 
-    //Initalize 10 clover
-    Acard card3;
-    card3.num=10;
-    strcpy(card3.pic, club);
+            //Put card Suite into card.pic
+            card.num = num;
+            switch (s)
+            {
+            case 1:
+                strcpy(card.pic, spade);
+                break;
+            case 2:
+                strcpy(card.pic, club);
+                break;
+            case 3:
+                strcpy(card.pic, heart);
+                break;
+            case 4:
+                strcpy(card.pic, diamond);
+                break;
+        
+            }
 
-    //Push back 3 7 spades
-    hand.push_back(card1);
-    hand.push_back(card1);
-    hand.push_back(card1);
+            hand.push_back(card);
+        }
 
-    //Push back other 2 cards
-    hand.push_back(card2);
-    hand.push_back(card2);
-
-    return hand;
+        printCards(handSize, hand);
+        return hand;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////

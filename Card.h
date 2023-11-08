@@ -73,8 +73,6 @@ public:
     void deleteHeads();
     Acard drawCard();
     
-
-public:
     //Functions
     Card();
     ~Card();
@@ -83,7 +81,7 @@ public:
     void printCard();
     void printCards(int rowSize, vector<Acard> dk);
     vector<Acard> getHand(int numCards);
-    vector<Acard> getTripple();
+    vector<Acard> customHand(int);
 
     
 };

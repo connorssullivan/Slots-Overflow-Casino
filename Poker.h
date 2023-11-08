@@ -21,11 +21,13 @@ class Poker: public Card{
         int getReward(int, vector<Poker::Acard>);
         vector<Poker::Acard> startRound();
         void deposite();
+        void rewardTable();
 
     //Public functions
     public:
         Poker(int);
         int start();
+        void validate();
         
 };
 
