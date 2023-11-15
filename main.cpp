@@ -18,18 +18,26 @@ int main(){
                 << "\n2: Play Binary Blackjack" 
                 << "\n3: Quit"
                 << "\nEnter: ";
-                cin.ignore();
                 cin.clear();
+                cin.ignore();
         }
 
-        //When defining blackjack we can name it binary blackjack
+        //Poker with Pointers
         if(mainMenuOption == 1){
             Poker p(playerBalance);
             playerBalance = p.start();
         }
 
-        if(mainMenuOption == 3)
+        //Binary blackjack
+        if(mainMenuOption == 2){
+            cout << "\nSorry Binary Blackjack is currently under maintmance" << endl;
+        }
+
+
+        if(mainMenuOption == 3){
+            cout << "\nThank you for playing at Slots overflow casino, We hope to see you again!" << endl;
             break;
+        }
     }
 
     

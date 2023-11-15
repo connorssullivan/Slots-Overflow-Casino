@@ -299,8 +299,8 @@ vector<Card::Acard> Card::customHand(int handSize){
             cout << "Enter a number between 1 and 13\nEnter: ";
             while(!(cin >> num) || num < 1 || num > 13){
                 cout << "Enter: ";
-                cin.ignore();
                 cin.clear();
+                cin.ignore();
             }
 
             //Get card Suite
@@ -309,8 +309,8 @@ vector<Card::Acard> Card::customHand(int handSize){
             cout << "1: Spade\n2: Club \n3: Heart\n4: Diamond\nEnter: ";
             while(!(cin >> s) || s < 1 || s > 4){
                 cout << "Enter: ";
-                cin.ignore();
                 cin.clear();
+                cin.ignore();
             }
 
             //Put card Suite into card.pic

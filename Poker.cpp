@@ -46,6 +46,8 @@ int Poker::start(){
 
             //Print game menu and get user input
             int menuOption;
+            rewardTable();
+
             cout << "\nYour Game Balance is = $" << gameBalance 
                     <<"\nChoose Option"
                     <<"\n1: Play Round " 
@@ -58,10 +60,10 @@ int Poker::start(){
                     <<"\nChoose Option"
                     <<"\n1: Play Round " 
                     <<"\n2: Validate Odds"
-                    << "\n3: Quit "
+                    << "\n3: Quit Or Deposit"
                     <<"\nEnter: ";
-                    cin.ignore();
                     cin.clear();
+                    cin.ignore();
             }
             
             //If user enters 1 then get their bet, and play a hand
@@ -75,8 +77,8 @@ int Poker::start(){
                 while(!(cin >> bet) || bet < 1 || bet > gameBalance){
                     cout << "\nYour Game Balance is = $" << gameBalance 
                         << "\nEnter a bet: ";
-                    cin.ignore();
                     cin.clear();
+                    cin.ignore();
                 }
 
                 //Subtract bet from gameBalance
@@ -190,7 +192,7 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
 
 
     //Determine if it's a royal flush
-    if(suits.size() == 1 && ranks[ACE] && ranks[KING] && ranks[QUEEN] && ranks[JACK] && ranks[TEN])
+    if(suits.size() == 1 && ranks[14] && ranks[KING] && ranks[QUEEN] && ranks[JACK] && ranks[TEN])
         multiplier = ROYAL_FLUSH;
 
     // If straight flush
@@ -205,21 +207,24 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
         // Sort the unique ranks
         sort(uniqueRanks.begin(), uniqueRanks.end());
 
-        // Check if there are at least 5 unique ranks in a consecutive sequence
-        if (uniqueRanks.size() >= 5) {
-            bool straight = true;
-            for (size_t i = 0; i < uniqueRanks.size() - 1; i++) {
-                if (uniqueRanks[i] + 1 != uniqueRanks[i + 1]) {
-                    straight = false;
-                    break;
-                }
+        //Figure out if it's a straight
+        bool straightFlush = true;
+        for (int i = 0; i < 4; i++) {
+            if (uniqueRanks[i] + 1 != uniqueRanks[i + 1]) {
+                straightFlush = false;
+                break;
             }
+        }
 
-            // Set multiplier to straight flush if it's a straight flush
-            if (straight) 
-                multiplier = STRAIGHT_FLUSH;
+        // Set multiplier to straight flush if it's a straight flush
+        if (straightFlush) {
+            multiplier = STRAIGHT_FLUSH;
+            cout << "Straight Flush"<<endl;
+        }else{
+            cout << "Not Straight Flush"<<endl;
+        }
         }   
-    }
+    
 
     //If Four of a kind
     if(multiplier == 0  && ranks.size() <= 2){
@@ -285,45 +290,28 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
         bool threeKind = false;
 
         for(const auto rank : ranks) 
-            if(rank.second == 3) //If you find 3 of the same cards set three kinds to true
+            if(rank.second == 3){ //If you find 3 of the same cards set three kinds to true
                 threeKind = true;
+                break;
+            }
 
         //If three kind is true, then change multiplier
         if(threeKind)
             multiplier = TRIPLE;
     }
 
-    //If two pair
-    if(multiplier == 0){
-        int pairs = 0; // Count of pairs
-
-        //Go through ranks
-        for (const auto rank : ranks) {
-
-            //If there is a pair
-            if (rank.second >= 2) 
-                pairs++;//Add to pairs
-            
-        }
-
-        //If there is 2 pairs
-        if (pairs == 2) 
-            multiplier = TWO_PAIR;
-        
-    }
-
+    //Jaack or better pair
     if(multiplier == 0){
         bool highCard = false; //Check if a card is a high card or better
 
-        for(auto card : hand){
-            if(card.num > 10){
+        for(const auto rank : ranks) 
+            if(rank.second == 2 && (rank.first > 10 || rank.first < 2)){ //If you find 2 of the same cards jack or better set jack up to true
                 highCard = true;
                 break;
             }
-        }
 
         if(highCard)
-            multiplier = 1;
+            multiplier = JACK_UP;
     }
 
     return multiplier;
@@ -386,9 +374,8 @@ void Poker::rewardTable(){
     cout << "\nPoker With Pointers Hand Reward Table" << endl;
     cout << " ____________________________________ " << endl;
     cout << "|Hand           |Reward              | " <<endl;
-    cout << "|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| " << endl;
+    cout << "|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾|‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾| " << endl;
     cout << "|Jack Up        |x1                  | " << endl; 
-    cout << "|Two Pait       |x2                  | " << endl;
     cout << "|Tripple        |x4                  | " << endl;
     cout << "|Straight       |x6                  | " << endl;
     cout << "|Flush          |x10                 | " << endl;

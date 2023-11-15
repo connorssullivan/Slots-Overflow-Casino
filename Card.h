@@ -16,7 +16,7 @@
 
 using namespace std;
 class Card {
-public:
+protected:
     //Acard structure
     struct Acard {
         int num;
