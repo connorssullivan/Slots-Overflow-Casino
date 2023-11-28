@@ -165,10 +165,7 @@ Card::Acard Card::drawCard(){
     Acard topCard = deck[nextCard];
     //cout << "\nIndex of draw card " << nextCard-1<<endl; 
     
-
     return topCard;
-    
-
 }
 
 
@@ -185,6 +182,29 @@ vector<Card::Acard> Card::getHand(int numCards){
     return hand;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+                            //Print Card //
+////////////////////////////////////////////////////////////////////////////////////////////////
+void Card::printCard(Acard card){
+    if(!heads.empty())
+        deleteHeads();
+
+    //Create the heads
+    createHeads(1, 1); 
+    for(int i = 0; i < heads.size(); i+=11)
+        getCardFunc(card,i);
+
+    //Print cards
+    Node* curr;
+    for(int i = 0; i < heads.size(); i++){
+        curr = heads[i];
+        while(curr){
+            cout << curr->str;
+            curr = curr->next;
+        }
+    }
+
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
                             //Print Cards //
@@ -203,8 +223,8 @@ void Card::printCards(int rowSize, vector<Acard> dk){
     for(int i = 0; i < heads.size(); i+=11){
 
         for(int j = rowSize; j > 0; j--){
-            getCardFunc(dk[index],i); //Get the 
-            cout << "Card Symbol is " << dk[index].pic << endl;
+            getCardFunc(dk[index],i); //Get the card function
+            //cout << "Card Symbol is " << dk[index].pic << endl;
             ++index;//Iterate through cards
         }
     }

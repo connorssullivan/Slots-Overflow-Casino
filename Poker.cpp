@@ -16,6 +16,18 @@ Poker::Poker(int balance):Card(){
 int Poker::start(){
     shuffleCard();//Shufle cards
 
+    std::cout << R"(
+ _____
+|A .  | _____
+| /.\\||A ^  | _____
+|(_._)|| / \ ||A _  | _____
+|  |  || \ / || ( ) ||A_ _ |
+|____V||  .  ||(_'_)||( v )|
+       |____V||  |  || \ / |
+              |____V||  .  |
+                     |____V|
+)" << std::endl;
+
     cout << "\n💵Welcome to Poker With Pointers💵" << endl;
     
     char play; //Holds yes or no
@@ -219,9 +231,6 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
         // Set multiplier to straight flush if it's a straight flush
         if (straightFlush) {
             multiplier = STRAIGHT_FLUSH;
-            cout << "Straight Flush"<<endl;
-        }else{
-            cout << "Not Straight Flush"<<endl;
         }
         }   
     

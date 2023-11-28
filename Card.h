@@ -78,10 +78,11 @@ protected:
     ~Card();
     void shuffleCard();
     void printDeckPart1Test(); //My function
-    void printCard();
+    void printCard(Acard);
     void printCards(int rowSize, vector<Acard> dk);
     vector<Acard> getHand(int numCards);
     vector<Acard> customHand(int);
+    
 
     
 };
