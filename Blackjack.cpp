@@ -311,7 +311,7 @@ int Blackjack::startRound(int bet){
 
     //draw for bot 
     while(botScore < 17){
-        cout << "\nDrawing For dealer pleas wait" << endl;
+        cout << "\nDrawing For dealer please wait" << endl;
         sleep(3);
 
         //Draw another card

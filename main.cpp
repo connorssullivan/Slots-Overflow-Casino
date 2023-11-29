@@ -6,9 +6,13 @@
 int main(){
     ifstream input; //Set up if stream
     char name[50]; //Player name
+    char tempName[50];
     char password[50]; //Player password
+    char tempPassword[50];
     int playerBalance;
-
+    int tempPlayerBalance;
+    char enteredName[50];
+    char enteredPasword[50];
     bool nameFound = false;
     
     //Open File
@@ -21,18 +25,19 @@ int main(){
     //Get users name and password
     while(!nameFound){
         cout << "\nEnter Your Name: ";
-        char enteredName[50];
         while (!(cin >> enteredName)){//Validate name
             cin.clear();
             cin.ignore();
         }
 
-        //Search through the file
+        //Search through the file 
         while(!input.eof()){
-            while(input >> name >> password >> playerBalance){
-                if(strcmp(name, enteredName) == 0){
+            while(input >> tempName >> tempPassword >> tempPlayerBalance){
+                if(strcmp(tempName, enteredName) == 0){//Return the last instance of the name
                     nameFound = true;
-                    break;
+                    strcpy(name, tempName);
+                    strcpy(password, tempPassword);
+                    playerBalance = tempPlayerBalance;
                 }
             }
         }
@@ -47,7 +52,6 @@ int main(){
     }
    
     //Get password
-    char enteredPasword[50];
     cout << "Enter password:";
     while (!(cin >> enteredPasword)){//Validate password
             cin.clear();
@@ -109,11 +113,19 @@ int main(){
         }
     }
 
-    ofstream output("temp.txt", ios::out);
-   output << " "<< name << " "<< password << " " << playerBalance;
 
-   input.close();
-   output.close();
+    input.close();
+
+    // Output to the file
+    ofstream output("login.txt", ios::app);
+    if(!output){
+        cout << "error" << endl;
+        return -1;
+    }
+
+   output << "\n"<<name << " "<< password << " " << playerBalance;
+
+    output.close();
     
     return 0;
 }
