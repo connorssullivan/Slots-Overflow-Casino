@@ -6,6 +6,12 @@ connor open 70
 
 default test 100
 
-park pass_us 900000
+park just_kidding 900000
 default test 100
-park pass_us 900000
+default test 100
+park just_kidding 900000
+default test 70
+default test 72
+default test 73
+default test 73
+default test 93

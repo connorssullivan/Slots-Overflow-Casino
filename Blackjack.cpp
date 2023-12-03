@@ -59,14 +59,16 @@ int Blackjack::start(){
             cout << "\nYour Game Balance is = $" << gameBalance 
                     <<"\nChoose Option"
                     <<"\n1: Play Round " 
-                    << "\n2: Quit Or Deposit"
+                    <<"\n2: Validate"
+                    << "\n3: Quit Or Deposit"
                     <<"\nEnter: ";
             while(!(cin >> menuOption) || menuOption < 1 || menuOption > 3)
             {
                 cout << "\nYour Game Balance is = $" << gameBalance 
                     <<"\nChoose Option"
-                    <<"\n1: Play Round " 
-                    << "\n2: Quit Or Deposit"
+                    <<"\n1: Play Round "
+                    <<"\n2: Validate" 
+                    << "\n3: Quit Or Deposit"
                     <<"\nEnter: ";
                     cin.clear();
                     cin.ignore();
@@ -97,9 +99,12 @@ int Blackjack::start(){
 
             }
             
+            if(menuOption == 2){
+                validate();
+            }
 
             //If user enters 2, add to the game balance to the player balance and return to previous menu
-            if(menuOption == 2) {
+            if(menuOption == 3) {
                 playerBalance += gameBalance; //add the game balance to the  playerBalance
                 gameBalance = 0;//Reset game balance
             }
@@ -136,7 +141,7 @@ int Blackjack::startRound(int bet){
     cout << endl;
 
     //If bot has an ace ask the player if they want insurance
-    if(botHand[0].num == ACE){
+    if(botHand[0].num == ACE && playerScore != 21){
         char insuranceOption;
         cout << "Would you like insurance?";
         cout << "\nDo You want to buy Insurance (y, n)? ";
@@ -175,7 +180,7 @@ int Blackjack::startRound(int bet){
 
             cout << "\nDealet Hand = " << botScore << endl;
             cout << "Player Hand = " << playerScore << endl;
-            cout << "\nDealer had Blackjack "<<endl;
+            cout << "\nYou Lose! Dealer had Blackjack "<<endl;
 
             cout << endl;
 
@@ -185,119 +190,119 @@ int Blackjack::startRound(int bet){
         if(insurance)
             bet = ceil(bet/2);
     }
+    if(playerScore != 21){
+        int option;
 
-    int option;
-
-    //Ask player to hit or stay or double for first card
-    cout <<"\nChoose Option"
-                <<"\n1: Hit " 
-                <<"\n2: Stay"
-                << "\n3: Double "
-                <<"\nEnter: ";
-    while(!(cin >> option) || option < 1 || option > 3)
-    {
-            cout << "\nEnter: ";
-            cin.clear();
-            cin.ignore();
-    }
-
-    //If player doubles after first card
-    if(option == 3){
-        //Double bet
-        bet *= 2;
-
-        //Push back new card
-        playerHand.push_back(drawCard());
-
-        //Increment hand Size
-       
-
-        //Add to player Score
-        playerScore = calculateScore(playerHand);
-
-        //Print both hands
-        cout << "\nDealers Hand" << endl;
-        printCards(1,botHand);
-
-        cout << "\n\nPlayers Hand" << endl;
-        printCards(playerHand.size(),playerHand);
-
-        cout << "\nDealet Hand = " << botScore << endl;
-        cout << "Player Hand = " << playerScore << endl;
-        cout << endl;
-
-        //If the player busts
-        if(playerScore > 21){
-            cout << "\nDeales Hand = " << botScore << endl;
-            cout << "Player Hand = " << playerScore << endl;
-            cout << "\nYou Lose! "  << endl;
-            return 0;
-        }
-    }
-
-    //If player hits
-    if(option == 1){
-
-        //Push back to player hand
-        playerHand.push_back(drawCard());
-
-        //Add to player score the new card
-        playerScore = calculateScore(playerHand);
-
-        //Set option back to -1
-        option = -1;
-
-        //Print both hands
-        cout << "\nDealers Hand" << endl;
-        printCards(botHand.size(),botHand);
-
-        cout << "\n\nPlayers Hand" << endl;
-        printCards(playerHand.size(),playerHand);
-        cout << "\nPlayer Hand = " << playerScore << endl;//print player score
-
-        cout << endl;
-
-        //Ask if user wants to hit or stay while they are below 21
-        while(playerScore < 21 && option != 2){
-            cout <<"\nChoose Option"
-                <<"\n1: Hit " 
-                <<"\n2: Stay"
-                <<"\nEnter: ";
-            while(!(cin >> option) || option > 2 || option < 1){//Validate user input
+        //Ask player to hit or stay or double for first card
+        cout <<"\nChoose Option"
+                    <<"\n1: Hit " 
+                    <<"\n2: Stay"
+                    << "\n3: Double "
+                    <<"\nEnter: ";
+        while(!(cin >> option) || option < 1 || option > 3)
+        {
                 cout << "\nEnter: ";
                 cin.clear();
                 cin.ignore();
-            }
+        }
 
-            //If user Hits
-            if(option == 1){
-                playerHand.push_back(drawCard());//draw card
-                playerScore = calculateScore(playerHand);
-            }
+        //If player doubles after first card
+        if(option == 3){
+            //Double bet
+            bet *= 2;
+
+            //Push back new card
+            playerHand.push_back(drawCard());
+
+            //Increment hand Size
+        
+
+            //Add to player Score
+            playerScore = calculateScore(playerHand);
+
             //Print both hands
             cout << "\nDealers Hand" << endl;
-            printCards(botHand.size(),botHand);
+            printCard(botHand[0]);
+
+            cout << "\n\nPlayers Hand" << endl;
+            printCards(playerHand.size(),playerHand);
+
+            cout << "\nDealet Hand = " << botScore << endl;
+            cout << "Player Hand = " << playerScore << endl;
+            cout << endl;
+
+            //If the player busts
+            if(playerScore > 21){
+                cout << "\nDeales Hand = " << botScore << endl;
+                cout << "Player Hand = " << playerScore << endl;
+                cout << "\nYou Busted!"<<endl;
+                return 0;
+            }
+        }
+
+        //If player hits
+        if(option == 1){
+
+            //Push back to player hand
+            playerHand.push_back(drawCard());
+
+            //Add to player score the new card
+            playerScore = calculateScore(playerHand);
+
+            //Set option back to -1
+            option = -1;
+
+            //Print both hands
+            cout << "\nDealers Hand" << endl;
+            printCard(botHand[0]);
 
             cout << "\n\nPlayers Hand" << endl;
             printCards(playerHand.size(),playerHand);
             cout << "\nPlayer Hand = " << playerScore << endl;//print player score
+
+            cout << endl;
+
+            //Ask if user wants to hit or stay while they are below 21
+            while(playerScore < 21 && option != 2){
+                cout <<"\nChoose Option"
+                    <<"\n1: Hit " 
+                    <<"\n2: Stay"
+                    <<"\nEnter: ";
+                while(!(cin >> option) || option > 2 || option < 1){//Validate user input
+                    cout << "\nEnter: ";
+                    cin.clear();
+                    cin.ignore();
+                }
+
+                //If user Hits
+                if(option == 1){
+                    playerHand.push_back(drawCard());//draw card
+                    playerScore = calculateScore(playerHand);
+                }
+                //Print both hands
+                cout << "\nDealers Hand" << endl;
+                printCard(botHand[0]);
+
+                cout << "\n\nPlayers Hand" << endl;
+                printCards(playerHand.size(),playerHand);
+                cout << "\nPlayer Hand = " << playerScore << endl;//print player score
+            }
+
+            //Print both hands
+            cout << "\nDealers Hand" << endl;
+            printCard(botHand[0]);
+
+            cout << "\n\nPlayers Hand" << endl;
+            printCards(playerHand.size(),playerHand);
+            cout << endl;
+
+            //If the player busts
+            if(playerScore > 21){
+                cout << "\nYou Busted!"<<endl;
+                return 0;
+            }
+
         }
-
-        //Print both hands
-        cout << "\nDealers Hand" << endl;
-        printCards(botHand.size(),botHand);
-
-        cout << "\n\nPlayers Hand" << endl;
-        printCards(playerHand.size(),playerHand);
-        cout << endl;
-
-        //If the player busts
-        if(playerScore > 21){
-            cout << "\nDeales Hand = " << botScore << endl;
-            cout << "Player Hand = " << playerScore << endl;
-            return 0;
-        }
-
     }
 
 
@@ -320,13 +325,18 @@ int Blackjack::startRound(int bet){
         //Add to bot score
         botScore = calculateScore(botHand);
 
-        //Print both hands
+        //Print Dealers Hand
         cout << "\nDealers Hand" << endl;
         printCards(botHand.size(),botHand);
 
  
 
     }
+
+    //Test
+    cout << endl;
+    for(Acard card : botHand)
+        cout << card.num << endl;
 
     //Get total bot score
     playerScore = calculateScore(playerHand);
@@ -406,7 +416,7 @@ int Blackjack::calculateScore(const vector<Blackjack::Acard>& hand){
     int numAces = 0;
 
     for (const Acard& card : hand) {
-        if(card.num > 11) //Check if its king or queen
+        if(card.num > 10) //Check if its king or queen
             score += 10;
         else score += card.num; //If its lower then queen
 
@@ -424,3 +434,28 @@ int Blackjack::calculateScore(const vector<Blackjack::Acard>& hand){
 
     return score; 
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+                            //Validate any hand//
+////////////////////////////////////////////////////////////////////////////////////////////////
+void Blackjack::validate(){
+    int handSize;
+    cout << "\nEnter a hand size: ";
+    while(!(cin >> handSize)){
+        cout << "Enter: ";
+        cin.clear();
+        cin.ignore();
+    }
+
+    //Create custom hand
+    vector<Acard> hand = customHand(handSize);
+
+    //Print the cards
+    printCards(handSize,hand);
+
+    //Show the hand
+    int score = calculateScore(hand);
+
+    cout << "\n\nHand Score: " << score;
+}
+

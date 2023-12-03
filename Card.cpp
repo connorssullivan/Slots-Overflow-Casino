@@ -8,13 +8,8 @@ Card::Card(){
 
     for(int suit = SPADE; suit <= DIAMOND; suit++){
         for(int rank = ACE; rank <= KING; rank++){
-            //Update next card
-            ++nextCard; //!!!Important not index of the card, if you want index subtract 1
-
             //Create new card
             Acard newCard;
-            deck.push_back(newCard);
-
             //Set card Rank
             newCard.num = rank;
 
@@ -41,11 +36,12 @@ Card::Card(){
                     break;
 
             }
-
-
-            
+            deck.push_back(newCard);
+            ++nextCard;
         }
     }
+
+    //cout << "First card is " << deck[0].num << " of " << deck[0].pic << endl;  
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,9 +135,10 @@ void Card::getCardFunc(Acard card,int row){
         cardKing(card.pic, row);
         break;
     default:
-        strcpy(card.pic,spade);
-        card.num=1;
-        cardAce(card.pic, row);
+        Acard defaultCard;
+        strcpy(defaultCard.pic,spade);
+        defaultCard.num=1;
+        cardAce(defaultCard.pic, row);
         break;
     
     }
@@ -162,8 +159,8 @@ Card::Acard Card::drawCard(){
 
     //Get the top card
     //cout << "\nIndex: " << nextCard << endl;
+    //cout << "Deck Size: " << deck.size() << endl;
     Acard topCard = deck[nextCard];
-    //cout << "\nIndex of draw card " << nextCard-1<<endl; 
     
     return topCard;
 }
@@ -584,6 +581,11 @@ void Card::cardFive(const char card[], int row) {
             strcat(line->str, card);
             strcat(line->str, "  |");
         } 
+
+        else if (i == 9) {
+            strcpy(line->str, "|    5|");
+        } 
+
         else if (i == 10) {
             strcpy(line->str, " ‾‾‾‾‾ ");
         } 

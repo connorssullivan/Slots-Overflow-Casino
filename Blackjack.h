@@ -28,7 +28,7 @@ class Blackjack: public Card{
     public:
         Blackjack(int);
         int start();
-        //void validate();
+        void validate();
         
 };
 
