@@ -2,15 +2,17 @@
 #include "Poker.h"
 #include "Blackjack.h"
 #include <fstream>
+#include <iomanip>
 
 int main(){
+    cout << fixed << setprecision(2);
     ifstream input; //Set up if stream
     char name[50]; //Player name
     char tempName[50];
     char password[50]; //Player password
     char tempPassword[50];
-    int playerBalance;
-    int tempPlayerBalance;
+    double playerBalance;
+    double tempPlayerBalance;
     char enteredName[50];
     char enteredPasword[50];
     bool nameFound = false;

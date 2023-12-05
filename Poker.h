@@ -12,8 +12,8 @@ class Poker: public Card{
     
     private:
     //Private members
-        int playerBalance;
-        int gameBalance;// Money for user
+        double playerBalance;
+        double gameBalance;// Money for user
         const int handSize = 5; //Hand size
         enum {JACK_UP = 1, TRIPLE = 4, STRAIGHT = 6, FLUSH = 10, FULL_HOUSE = 100, FOUR_CARD = 1000, STRAIGHT_FLUSH = 10000, ROYAL_FLUSH = 10000};
         
@@ -25,8 +25,8 @@ class Poker: public Card{
 
     //Public functions
     public:
-        Poker(int);
-        int start();
+        Poker(double);
+        double start();
         void validate();
         
 };

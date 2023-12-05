@@ -4,16 +4,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
                             //Constructor //
 ////////////////////////////////////////////////////////////////////////////////////////////////
-Poker::Poker(int balance):Card(){
+Poker::Poker(double balance):Card(){
     playerBalance = balance; //Set player balance
-    gameBalance = 0;//Set game balance
+    gameBalance = 0.00;//Set game balance
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
                             //Start//
 ////////////////////////////////////////////////////////////////////////////////////////////////
-int Poker::start(){
+double Poker::start(){
     shuffleCard();//Shufle cards
 
     std::cout << R"(
@@ -81,12 +81,12 @@ int Poker::start(){
             //If user enters 1 then get their bet, and play a hand
             if(menuOption == 1){
                 //Get user bet
-                int bet = 0;
+                double bet = 0;
 
                 //Get user bet
                 cout << "\nYour Game Balance is = $" << gameBalance 
                         << "\nEnter a bet: ";
-                while(!(cin >> bet) || bet < 1 || bet > gameBalance){
+                while(!(cin >> bet) || bet < 0 || bet > gameBalance){
                     cout << "\nYour Game Balance is = $" << gameBalance 
                         << "\nEnter a bet: ";
                     cin.clear();
@@ -333,7 +333,7 @@ int Poker::getReward(int bet, vector<Poker::Acard> hand){
 void Poker::deposite(){
 
     //Ask for user money
-    int money;
+    double money;
     cout <<"\nDeposit 💵: ";
     while(!(cin >> money) || money > playerBalance){ //get the amount of money deposited
         cout << "\nYou only have " << playerBalance << endl;

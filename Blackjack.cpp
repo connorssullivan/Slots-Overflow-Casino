@@ -3,16 +3,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
                             //Constructor//
 ////////////////////////////////////////////////////////////////////////////////////////////////
-Blackjack::Blackjack(int balance):Card(){
+Blackjack::Blackjack(double balance):Card(){
     playerBalance = balance; //Set player balance
-    gameBalance = 0;//Set game balance
+    gameBalance = 0.00;//Set game balance
 
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
                             //Start//
 ////////////////////////////////////////////////////////////////////////////////////////////////
-int Blackjack::start(){
+double Blackjack::start(){
     shuffleCard();//Shufle cards
 
     std::cout << R"(
@@ -30,7 +30,7 @@ int Blackjack::start(){
     char play; //Holds yes or no
 
     //While the user has no money ask them if they want to play and how much they want to deposit
-    while(gameBalance < 1){
+    while(gameBalance == 0){
         //Ask the user if they want to play
         cout << "\nYou need to have at least 1 💵 in your game balance to play\nYour Total 💵 is  " << playerBalance << endl;
         cout << "\nDo You want to play (y, n)? ";
@@ -77,12 +77,12 @@ int Blackjack::start(){
             //If user enters 1 then get their bet, and play a hand
             if(menuOption == 1){
                 //Get user bet
-                int bet = 0;
+                double bet = 0.0;
 
                 //Get user bet
                 cout << "\nYour Game Balance is = $" << gameBalance 
                         << "\nEnter a bet: ";
-                while(!(cin >> bet) || bet < 1 || bet > gameBalance){
+                while(!(cin >> bet) || bet < 0 || bet > gameBalance){
                     cout << "\nYour Game Balance is = $" << gameBalance 
                         << "\nEnter a bet: ";
                     cin.clear();
@@ -117,7 +117,7 @@ int Blackjack::start(){
 ////////////////////////////////////////////////////////////////////////////////////////////////
                             //Start Rount//
 ////////////////////////////////////////////////////////////////////////////////////////////////
-int Blackjack::startRound(int bet){
+double Blackjack::startRound(double bet){
     bool insurance = false;
 
     //Clear Player Hand
@@ -188,7 +188,7 @@ int Blackjack::startRound(int bet){
         }
 
         if(insurance)
-            bet = ceil(bet/2);
+            bet = bet/2;
     }
     if(playerScore != 21){
         int option;
@@ -385,7 +385,7 @@ int Blackjack::startRound(int bet){
 ////////////////////////////////////////////////////////////////////////////////////////////////
 void Blackjack::deposite(){
     //Ask for user money
-    int money;
+    double money;
     cout <<"\nDeposit 💵: ";
     while(!(cin >> money) || money > playerBalance){ //get the amount of money deposited
         cout << "\nYou only have " << playerBalance << endl;
@@ -451,7 +451,7 @@ void Blackjack::validate(){
     vector<Acard> hand = customHand(handSize);
 
     //Print the cards
-    printCards(handSize,hand);
+    //printCards(handSize,hand); Unesesary
 
     //Show the hand
     int score = calculateScore(hand);

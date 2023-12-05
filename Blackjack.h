@@ -14,20 +14,20 @@ class Blackjack: public Card{
     
     private:
     //Private members
-        int playerBalance;
-        int gameBalance;// Money for user
+        double playerBalance;
+        double gameBalance;// Money for user
         
         //Helper Functions
-        int getReward(int, vector<Blackjack::Acard>);
-        int startRound(int);
+        double getReward(double, vector<Blackjack::Acard>);
+        double startRound(double);
         void deposite();
         //void rewardTable();
         int calculateScore(const vector<Blackjack::Acard>& );
 
     //Public functions
     public:
-        Blackjack(int);
-        int start();
+        Blackjack(double);
+        double start();
         void validate();
         
 };
